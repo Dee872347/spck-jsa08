@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindX Cinema</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Vina+Sans&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color:#1b1d1f
+            
+        }
+
+        /* NAVIGATION BAR */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            position: relative;
+            background-color: #1b1d1f;
+        }
+        .logo-text {
+            font-family: "Vina Sans", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            font-size: 30px;
+            color: #bf2835;
+            padding: 0px;
+            margin: 0px;
+        }
+        .nav-links {
+            padding: 0px;
+            margin: 0px;
+            display: flex;
+            list-style: none;
+            font-family: "Vina Sans", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            font-size: 30px;
+            gap: 20px;
+
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #bf2835;
+        
+        }
+        .nav-links a:hover {
+            color: #91010d;
+            
+        }   
+
+        h3 {
+            color: white
+        }
+
+    </style>
+</head>
+
+<body>
+    <!-- NAVIGATION BAR -->
+    <nav>
+        <div>
+            <h1 class="logo-text">MindX Cinema</h1>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="#">Genre</a></li>
+            <li><a href="#">Movies</a></li>
+            <li><a href="#">Series</a></li>
+            <input type="text" id="searchInput" placeholder="Enter movie name"/>
+            <button onclick="searchMovies()">Search</button>
+        </ul>
+    </nav>
+    <!--  -->
+
+
+    <!-- SEARCH RESULT SECTION -->
+    <section class="hero">
+
+        <div id="searchResult"></div>
+
+
+        <script>
+            async function searchMovies() {
+                const query = document.getElementById("searchInput").value
+                const result = document.getElementById("searchResult")
+                
+                result.innerHTML = "Loading..."
+
+                try {
+                    const response = await fetch(`http://www.omdbapi.com/?s=${query}&apikey=fe21ced9`)
+                    const data = await response.json()
+                    
+                    result.innerHTML = ""
+                    data.Search.forEach(movie => {
+                        const movieDiv = document.createElement("div")
+                        movieDiv.className = "movie"
+
+                        movieDiv.innerHTML = `
+                            <h3>${movie.Title}</h3>
+                            <img src="${movie.Poster}">
+                        `
+                        result.appendChild(movieDiv)
+                    })
+                } catch (error) {
+                    console.error(error)
+                }
+            }
+        </script>
+
+
+    </section>
+    <!--  -->
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+</body>
+
+</html>
