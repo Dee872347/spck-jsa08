@@ -1,0 +1,40 @@
+    <section class="hero">
+
+        <div id="searchResult" class="information"></div>
+
+
+        <script>
+            async function searchMovies(query) {
+                if (!query) {
+                    query = document.getElementById("searchInput").value
+                }
+                const result = document.getElementById("searchResult")
+
+                result.innerHTML = "Loading..."
+
+                try {
+                    const response = await fetch(`https://api.rawg.io/api/games?search=${query}&key=c904be1ce505467eb6d63e3b5f5ef718`)
+                    const data = await response.json()
+                    console.log(data)
+
+                    result.innerHTML = ""
+                    data.results.forEach(game => {
+                        const gameDiv = document.createElement("div")
+                        gameDiv.className = "game"
+
+                        gameDiv.innerHTML = `
+                            <h3 class="text">Tên game: 
+                                </h3><h3>${game.name}</h3>
+                            <h3 class="text">Ngày phát hành: 
+                                </h3><h3>${game.released}</h3>
+                            <h3 class="text">Một số hình ảnh về game: 
+                                </h3><img src="${game.background_image}">
+                        `
+                        result.appendChild(gameDiv)
+                    })
+                } catch (error) {
+                    console.error(error)
+                }
+            }
+        </script>
+    </section>
