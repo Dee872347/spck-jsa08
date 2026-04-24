@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OneGame - Tìm kiếm Game</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1b1d1f 0%, #2d3436 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background: rgba(255, 255, 255, 0.05) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px 0;
+        }
+
+        .navbar-brand {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #00d9ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8) !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 8px 15px !important;
+            border-radius: 8px;
+        }
+
+        .nav-link:hover {
+            color: #00d9ff !important;
+            background: rgba(0, 217, 255, 0.1);
+        }
+
+        .nav-link.active {
+            color: #00ff88 !important;
+        }
+
+        .dropdown-menu {
+            background: rgba(45, 52, 54, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 10px;
+        }
+
+        .dropdown-item {
+            color: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            padding: 10px 15px;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(0, 217, 255, 0.2);
+            color: #00d9ff;
+        }
+
+        /* Search Form */
+        .search-form .form-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 25px;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+        }
+
+        .search-form .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .search-form .form-control:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #00d9ff;
+            box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.2);
+            color: white;
+        }
+
+        .search-form .btn {
+            border-radius: 25px;
+            padding: 10px 25px;
+            font-weight: 600;
+            background: linear-gradient(45deg, #00d9ff, #00ff88);
+            border: none;
+            color: #1b1d1f;
+            transition: all 0.3s ease;
+        }
+
+        .search-form .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(0, 217, 255, 0.4);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 40px 20px;
+        }
+
+        .hero-title {
+            text-align: center;
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .hero-subtitle {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+        }
+
+        /* Game Cards Grid */
+        .container-game {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .card-custom {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-custom:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            border-color: rgba(0, 217, 255, 0.3);
+        }
+
+        .card-custom img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .card-custom:hover img {
+            transform: scale(1.1);
+        }
+
+        .card-img-wrapper {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card-img-wrapper::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(to top, rgba(27, 29, 31, 0.8), transparent);
+        }
+
+        .card-body-custom {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .card-meta i {
+            color: #00d9ff;
+        }
+
+        .card-meta span {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .rating-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: linear-gradient(45deg, #ff6b6b, #ffa502);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .btn-play {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(45deg, #00d9ff, #00ff88);
+            color: #1b1d1f;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-play:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(0, 217, 255, 0.4);
+        }
+
+        /* Loading & Empty States */
+        .loading,
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .loading i {
+            font-size: 3rem;
+            color: #00d9ff;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.5;
+                transform: scale(1.1);
+            }
+        }
+
+        .no-results i {
+            font-size: 4rem;
+            color: rgba(255, 255, 255, 0.3);
+            margin-bottom: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 1.8rem;
+            }
+
+            .container-game {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="trang_chu.html">
+                <i class="bi bi-controller"></i> OneGame
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="trang_chu.html">
+                            <i class="bi bi-house-door"></i> Trang chủ
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="bi bi-people"></i> Về chúng tôi
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <i class="bi bi-tools"></i> Tiện ích
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">
+                                    <i class="bi bi-search"></i> Tìm kiếm thông tin game
+                                </a></li>
+                            <li><a class="dropdown-item" href="#">
+                                    <i class="bi bi-shop"></i> Tìm kiếm cửa hàng tải game
+                                </a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#">
+                                    <i class="bi bi-question-circle"></i> Trợ giúp
+                                </a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <form class="d-flex search-form" role="search">
+                    <input id="searchInput" class="form-control me-2" type="search" placeholder="Tìm kiếm game..."
+                        aria-label="Search" />
+                    <button class="btn" type="button" onclick="searchMovies()">
+                        <i class="bi bi-search"></i> Tìm
+                    </button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1 class="hero-title">🔍 Khám Phá Thế Giới Game</h1>
+        <p class="hero-subtitle">Tìm kiếm thông tin cửa hàng tải game yêu thích của bạn</p>
+
+        <div id="searchResult" class="container-game"></div>
+    </section>
+
+    <script>
+            async function searchMovies(query) {
+        if (!query) {
+                query = document.getElementById("searchInput").value.trim();
+        }
+
+            if (!query) {
+                alert("Vui lòng nhập ID hoặc tên viết liền của game (ví dụ: 3498 hoặc grand-theft-auto-v)!");
+            return;
+        }
+
+            const result = document.getElementById("searchResult");
+            result.innerHTML = `
+            <div class="loading">
+                <i class="bi bi-controller"></i>
+                <p>Đang tìm kiếm cửa hàng...</p>
+            </div>
+            `;
+
+            try {
+            // SỬA TẠI ĐÂY: Dùng ${query} thay vì ${game_pk}
+            const response = await fetch(`https://api.rawg.io/api/games/${query}/stores?key=c904be1ce505467eb6d63e3b5f5ef718`);
+
+            if (!response.ok) throw new Error("Không tìm thấy game");
+
+            const data = await response.json();
+            result.innerHTML = "";
+
+            if (!data.results || data.results.length === 0) {
+                result.innerHTML = `
+                    <div class="no-results" style="grid-column: 1 / -1;">
+                        <i class="bi bi-emoji-frown"></i>
+                        <h3>Không tìm thấy cửa hàng nào</h3>
+                        <p>Hãy thử nhập chính xác ID game hoặc slug game nhé!</p>
+                    </div>
+                `;
+            return;
+            }
+
+            data.results.forEach(item => {
+                const gameDiv = document.createElement("div");
+            gameDiv.className = "card-custom";
+
+            // Lưu ý: API stores trả về link trực tiếp qua trường 'url'
+            gameDiv.innerHTML = `
+            <div class="card-img-wrapper">
+                <img src="https://via.placeholder.com/300x180?text=Store+Image" alt="Store">
+            </div>
+            <div class="card-body-custom">
+                <div>
+                    <h3 class="card-title">Cửa hàng ID: ${item.store_id}</h3>
+                    <div class="card-meta">
+                        <i class="bi bi-link-45deg"></i>
+                        <span>Liên kết chính thức</span>
+                    </div>
+                </div>
+                <a href="${item.url}" target="_blank" class="btn-play" style="text-decoration: none;">
+                    <i class="bi bi-cart-check"></i> Đến cửa hàng
+                </a>
+            </div>
+            `;
+            result.appendChild(gameDiv);
+            });
+
+        } catch (error) {
+                console.error(error);
+            result.innerHTML = `
+            <div class="no-results" style="grid-column: 1 / -1;">
+                <i class="bi bi-exclamation-triangle"></i>
+                <h3>Không tìm thấy dữ liệu</h3>
+                <p>Lưu ý: Bạn cần nhập slug (ví dụ: cyberpunk-2077) thay vì tên có dấu cách.</p>
+            </div>
+            `;
+        }
+    }
+
+    document.getElementById("searchInput").addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            searchMovies();
+        }
+    });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
+
+</body>
+
+</html>
