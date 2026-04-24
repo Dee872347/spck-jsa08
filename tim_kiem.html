@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OneGame - Tìm kiếm Game</title>
+    <title>OneGame - Tìm kiếm thông tin Game</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -15,13 +15,17 @@
             box-sizing: border-box;
         }
 
+        .navbar-nav .nav-link.active {
+            color: #ffae00 !important;
+            background: transparent;
+        }
+
         body {
             background: linear-gradient(135deg, #1b1d1f 0%, #2d3436 100%);
             min-height: 100vh;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* Navbar Styles */
         .navbar {
             background: rgba(255, 255, 255, 0.05) !important;
             backdrop-filter: blur(10px);
@@ -75,7 +79,6 @@
             color: #00d9ff;
         }
 
-        /* Search Form */
         .search-form .form-control {
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -111,7 +114,6 @@
             box-shadow: 0 5px 20px rgba(0, 217, 255, 0.4);
         }
 
-        /* Hero Section */
         .hero {
             padding: 40px 20px;
         }
@@ -131,7 +133,6 @@
             font-size: 1.1rem;
         }
 
-        /* Game Cards Grid */
         .container-game {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -200,6 +201,7 @@
             line-height: 1.4;
             display: -webkit-box;
             -webkit-line-clamp: 2;
+            line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
@@ -254,7 +256,6 @@
             box-shadow: 0 10px 30px rgba(0, 217, 255, 0.4);
         }
 
-        /* Loading & Empty States */
         .loading, .no-results {
             text-align: center;
             padding: 60px 20px;
@@ -278,7 +279,6 @@
             margin-bottom: 20px;
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             .hero-title {
                 font-size: 1.8rem;
@@ -293,7 +293,6 @@
 </head>
 
 <body>
-    <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="trang_chu.html">
@@ -313,7 +312,7 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">
-                            <i class="bi bi-people"></i> Về chúng tôi
+                            <i class="bi bi-cpu"></i> AI
                         </a>
                     </li>
                     <li class="nav-item dropdown">
@@ -322,14 +321,14 @@
                             <i class="bi bi-tools"></i> Tiện ích
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">
-                                <i class="bi bi-search"></i> Tìm kiếm thông tin game
+                            <li><a class="nav-link active" href="http://127.0.0.1:5500/tim_kiem.html">
+                                <i class="bi bi-search"></i> Tìm kiếm thông tin game    
                             </a></li>
-                            <li><a class="dropdown-item" href="#">
+                            <li><a class="dropdown-item" href="http://127.0.0.1:5500/Cuu_hang.html#">
                                 <i class="bi bi-shop"></i> Tìm kiếm cửa hàng tải game
                             </a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#">
+                            <li><a class="dropdown-item" href="https://support.google.com/?hl=vi">
                                 <i class="bi bi-question-circle"></i> Trợ giúp
                             </a></li>
                         </ul>
@@ -346,7 +345,6 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
     <section class="hero">
         <h1 class="hero-title">🔍 Khám Phá Thế Giới Game</h1>
         <p class="hero-subtitle">Tìm kiếm thông tin hàng ngàn game yêu thích của bạn</p>
@@ -435,7 +433,6 @@
             }
         }
 
-        // Enter key search
         document.getElementById("searchInput").addEventListener("keypress", function(event) {
             if (event.key === "Enter") {
                 searchMovies();
@@ -446,10 +443,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
-</body>
-
-</html>
-
 </body>
 
 </html>
