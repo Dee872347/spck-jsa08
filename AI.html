@@ -134,7 +134,6 @@
             font-size: 1.1rem;
         }
 
-        /* Game Cards Grid */
         .container-game {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -307,7 +306,6 @@
 </head>
 
 <body>
-    <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="trang_chu.html">
@@ -326,7 +324,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="AI.html">
+                        <a class="nav-link" id="101" href="#">
                             <i class="bi bi-cpu"></i> AI
                         </a>
                     </li>
@@ -361,125 +359,10 @@
             </div>
         </div>
     </nav>
-
-    <!-- Hero Section -->
-    <section class="hero">
-        <h1 class="hero-title">🔍 Khám Phá các cửa hàng game</h1>
-        <p class="hero-subtitle">Tìm kiếm thông tin cửa hàng tải game yêu thích của bạn</p>
-
-        <div id="searchResult" class="container-game"></div>
-    </section>
-
-    <script>
-        async function searchMovies(query) {
-            if (!query) {
-                query = document.getElementById("searchInput").value.trim();
-            }
-
-            if (!query) {
-                alert("Vui lòng nhập tên game!");
-                return;
-            }
-
-            const result = document.getElementById("searchResult");
-            result.innerHTML = `
-        <div class="loading">
-            <i class="bi bi-controller"></i>
-            <p>Đang tìm kiếm game...</p>
-        </div>
-        `;
-
-            try {
-                const response = await fetch(`https://api.rawg.io/api/games?key=c904be1ce505467eb6d63e3b5f5ef718&search=${query}`);
-
-                if (!response.ok) throw new Error("Lỗi kết nối API");
-
-                const data = await response.json();
-                result.innerHTML = "";
-
-                if (!data.results || data.results.length === 0) {
-                    result.innerHTML = `
-                <div class="no-results" style="grid-column: 1 / -1;">
-                    <i class="bi bi-emoji-frown"></i>
-                    <h3>Không tìm thấy game nào</h3>
-                    <p>Hãy thử từ khóa khác nhé!</p>
-                </div>
-            `;
-                    return;
-                }
-                data.results.forEach(item => {
-                    const gameDiv = document.createElement("div");
-                    gameDiv.className = "card-custom";
-
-                    const gameImg = item.background_image || "https://via.placeholder.com/300x180?text=No+Image";
-
-                    const rating = item.rating || "N/A";
-
-                    gameDiv.innerHTML = `
-            <div class="card-img-wrapper">
-                <img src="${gameImg}" alt="${item.name}">
-            </div>
-            <div class="card-body-custom">
-                <div>
-                    <h3 class="card-title">${item.name}</h3>
-                    <div class="card-meta">
-                        <span class="rating-badge">
-                            <i class="bi bi-star-fill"></i> ${rating}
-                        </span>
-                        <span>Phát hành: ${item.released || "Chưa rõ"}</span>
-                    </div>
-                </div>
-                <button onclick="goToStore('${item.id}')" class="btn-play">
-                <i class="bi bi-shop"></i> Xem cửa hàng
-                </button>
-            </div>
-            `;
-                    result.appendChild(gameDiv);
-                });
-
-            } catch (error) {
-                console.error(error);
-                result.innerHTML = `
-        <div class="no-results" style="grid-column: 1 / -1;">
-            <i class="bi bi-exclamation-triangle"></i>
-            <h3>Đã xảy ra lỗi</h3>
-            <p>Vui lòng kiểm tra lại kết nối hoặc API Key.</p>
-        </div>
-        `;
-            }
-        }
-
-        document.getElementById("searchInput").addEventListener("keypress", function (event) {
-            if (event.key === "Enter") {
-                searchMovies();
-            }
-        });
-
-        async function goToStore(gameId) {
-            try {
-                const response = await fetch(`https://api.rawg.io/api/games/${gameId}/stores?key=c904be1ce505467eb6d63e3b5f5ef718`);
-                const data = await response.json();
-
-                if (data.results && data.results.length > 0) {
-                    const storeUrl = data.results[0].url;
-                    window.open(storeUrl, '_blank');
-                } else {
-                    alert("Rất tiếc, game này hiện chưa có liên kết cửa hàng chính thức!");
-                }
-            } catch (error) {
-                console.error("Lỗi khi lấy link store:", error);
-                alert("Không thể kết nối đến cửa hàng lúc này.");
-            }
-        }
-    </script>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
 </body>
 
-</html>
-
 </body>
 
-</html>
