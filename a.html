@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Master AI - Groq Edition</title>
+
+    <style>
+        :root {
+            --bg-body: #05070a;
+            --bg-chat: #0f121a;
+            --neon-blue: #00f2ff;
+            --neon-red: #ff0055;
+            --text-color: #e0e6ed;
+            --border-color: #1f2937;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-color);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .chat-wrapper {
+            width: 95%;
+            max-width: 800px;
+            height: 85vh;
+            background: var(--bg-chat);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 0 25px rgba(0, 242, 255, 0.15);
+        }
+
+        .header {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 1.3rem;
+            color: var(--neon-blue);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 8px rgba(0, 242, 255, 0.6);
+        }
+
+        .status {
+            color: #49e359;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .chat-box {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background: linear-gradient(to bottom, #0f121a, #05070a);
+        }
+
+        .msg {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 15px;
+            line-height: 1.5;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ai {
+            background: #1f2937;
+            align-self: flex-start;
+            border-left: 4px solid var(--neon-blue);
+        }
+
+        .user {
+            background: var(--neon-red);
+            color: white;
+            align-self: flex-end;
+            border-right: 4px solid #fff;
+        }
+
+        /* Khu vực nhập liệu */
+        .input-area {
+            padding: 20px;
+            background: #05070a;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 10px;
+        }
+
+        input {
+            flex: 1;
+            background: #111827;
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            border-radius: 8px;
+            color: white;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: var(--neon-blue);
+        }
+
+        button {
+            background: var(--neon-blue);
+            color: #000;
+            border: none;
+            padding: 0 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px var(--neon-blue);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--border-color); }
+    </style>
+</head>
+<body>
+
+    <div class="chat-wrapper">
+        <header class="header">
+            <h1>🎮 GAME MASTER AI</h1>
+            <div class="status">● ONLINE</div>
+        </header>
+
+        <div id="chatBox" class="chat-box">
+            <div class="msg ai">
+                Yo! Tao là Game Master AI đây. <br>
+                Mày muốn giới thiệu game mới, tra cứu cấu hình hay cần hướng dẫn phá đảo trò nào thì nói tao nghe!
+            </div>
+        </div>
+
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="Hỏi về game tại đây..." autocomplete="off">
+            <button id="sendBtn">GỬI 🚀</button>
+        </div>
+    </div>
+
+    <script>
+        const API_KEY = "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";
+        const MODEL = "llama-3.3-70b-versatile";
+
+        const chatBox = document.getElementById("chatBox");
+        const userInput = document.getElementById("userInput");
+        const sendBtn = document.getElementById("sendBtn");
+
+        async function sendMessage() {
+            const text = userInput.value.trim();
+            if (!text || sendBtn.disabled) return;
+            appendMsg(text, 'user');
+            userInput.value = "";
+            
+            const aiDiv = appendMsg("Đang quét dữ liệu game...", 'ai');
+            sendBtn.disabled = true;
+
+            try {
+                const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${API_KEY}`,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        model: MODEL,
+                        messages: [
+                            { 
+                                role: "system", 
+                                content: "Mày là trợ lý chuyên về Game. Chỉ trả lời các nội dung liên quan tới video games, gaming gear, esports. Xưng mày tao thân thiện. Nếu khách hỏi gì khác game, hãy bảo là tao chỉ quan tâm tới game thôi mày ơi." 
+                            },
+                            { role: "user", content: text }
+                        ]
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.choices && data.choices[0]) {
+                    aiDiv.innerText = data.choices[0].message.content;
+                } else {
+                    aiDiv.innerText = "Lỗi hệ thống rồi. Xem lại key Groq đi mày!";
+                }
+            } catch (err) {
+                aiDiv.innerText = "Mất mạng rồi mày ơi!";
+            } finally {
+                sendBtn.disabled = false;
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+        }
+
+        function appendMsg(text, type) {
+            const div = document.createElement("div");
+            div.className = `msg ${type}`;
+            div.innerText = text;
+            chatBox.appendChild(div);
+            chatBox.scrollTop = chatBox.scrollHeight;
+            return div;
+        }
+
+        sendBtn.onclick = sendMessage;
+        userInput.onkeypress = (e) => { if(e.key === 'Enter') sendMessage(); };
+    </script>
+</body>
+</html>
