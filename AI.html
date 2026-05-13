@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="vi">
 
-<head>
+<  head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OneGame - AI Trợ Lý Game</title>
@@ -17,6 +17,7 @@
             --neon-red: #ff0055;
             --text-color: rgba(255, 255, 255, 0.8);
             --border-color: rgba(255, 255, 255, 0.1);
+            --user-msg-bg: #ffae00;
         }
 
         body {
@@ -28,7 +29,6 @@
             flex-direction: column;
         }
 
-        /* --- NAVBAR CUSTOM --- */
         .navbar {
             background: rgba(255, 255, 255, 0.05) !important;
             backdrop-filter: blur(10px);
@@ -53,7 +53,7 @@
         }
 
         .nav-link:hover, .nav-link.active {
-            color: var(--neon-green) !important;
+            color: var(--user-msg-bg) !important;
             background: rgba(0, 255, 136, 0.1);
         }
 
@@ -137,7 +137,7 @@
             border-left: 4px solid var(--neon-blue);
         }
 
-        .user {
+        .    {
             background: var(--neon-red);
             align-self: flex-end;
             border-right: 4px solid #fff;
