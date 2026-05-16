@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="vi">
 
-<  head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OneGame - AI Trợ Lý Game</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    
+
     <style>
         :root {
             --bg-body: #1b1d1f;
@@ -52,7 +52,8 @@
             margin: 0 5px;
         }
 
-        .nav-link:hover, .nav-link.active {
+        .nav-link:hover,
+        .nav-link.active {
             color: var(--user-msg-bg) !important;
             background: rgba(0, 255, 136, 0.1);
         }
@@ -137,7 +138,7 @@
             border-left: 4px solid var(--neon-blue);
         }
 
-        .    {
+        .user {
             background: var(--neon-red);
             align-self: flex-end;
             border-right: 4px solid #fff;
@@ -176,9 +177,25 @@
             box-shadow: 0 0 15px var(--neon-blue);
         }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: var(--border-color); }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+        }
     </style>
 </head>
 
@@ -204,10 +221,15 @@
                             <i class="bi bi-tools"></i> Tiện ích
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="tim_kiem.html"><i class="bi bi-search"></i> Tìm kiếm thông tin game</a></li>
-                            <li><a class="dropdown-item" href="Cuu_hang.html"><i class="bi bi-shop"></i> Tìm kiếm cửa hàng tải game</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="https://support.google.com/?hl=vi"><i class="bi bi-question-circle"></i> Trợ giúp</a></li>
+                            <li><a class="dropdown-item" href="tim_kiem.html"><i class="bi bi-search"></i> Tìm kiếm
+                                    thông tin game</a></li>
+                            <li><a class="dropdown-item" href="Cuu_hang.html"><i class="bi bi-shop"></i> Tìm kiếm cửa
+                                    hàng tải game</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="https://support.google.com/?hl=vi"><i
+                                        class="bi bi-question-circle"></i> Trợ giúp</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -225,16 +247,15 @@
                 <div class="msg ai">Yo! Tui là AI đây. Bạn cần hỏi gì về game hay cách phá đảo không?</div>
             </div>
             <div class="input-area">
-                <input type="text" id="userInput" placeholder="Hỏi tao bất cứ thứ gì về game..." autocomplete="off">
+                <input type="text" id="userInput" placeholder="Hỏi tôi bất cứ thứ gì về game..." autocomplete="off">
                 <button id="sendBtn">GỬI 🚀</button>
             </div>
         </div>
     </section>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="load_env.js"></script>
     <script>
-        const API_KEY = "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";
-        const MODEL = "llama-3.3-70b-versatile";
 
         const chatBox = document.getElementById("chatBox");
         const userInput = document.getElementById("userInput");
@@ -252,7 +273,10 @@
             try {
                 const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                     method: "POST",
-                    headers: { "Authorization": `Bearer ${API_KEY}`, "Content-Type": "application/json" },
+                    headers: {
+                        "Authorization": `Bearer ${API_KEY}`,
+                        "Content-Type": "application/json"
+                    },
                     body: JSON.stringify({
                         model: MODEL,
                         messages: [
@@ -261,12 +285,17 @@
                         ]
                     })
                 });
+
                 const data = await response.json();
-                aiDiv.innerText = data.choices[0].message.content;
-            } catch (err) { aiDiv.innerText = "Lỗi kết nối rồi!"; }
-            finally {
-                sendBtn.disabled = false;
-                chatBox.scrollTop = chatBox.scrollHeight;
+
+                if (!response.ok) {
+                    aiDiv.innerText = `Lỗi từ API: ${data.error?.message || "Không xác định"}`;
+                } else {
+                    aiDiv.innerText = data.choices[0].message.content;
+                }
+            } catch (err) {
+                console.error(err);
+                aiDiv.innerText = "Lỗi kết nối! Hãy kiểm tra Console (F12).";
             }
         }
 
@@ -280,7 +309,8 @@
         }
 
         sendBtn.onclick = sendMessage;
-        userInput.onkeypress = (e) => { if(e.key === 'Enter') sendMessage(); };
+        userInput.onkeypress = (e) => { if (e.key === 'Enter') sendMessage(); };
     </script>
 </body>
+
 </html>
