@@ -25,6 +25,7 @@
             flex-direction: column;
         }
 
+        /* NAVBAR GIỮ NGUYÊN Y CHANG CỦA TRANG CHỦ */
         .navbar {
             background: rgba(255, 255, 255, 0.05) !important;
             backdrop-filter: blur(10px);
@@ -75,6 +76,7 @@
             color: #00d9ff;
         }
 
+        /* KHU VỰC FORM ĐĂNG NHẬP / ĐĂNG KÝ */
         .auth-container {
             flex: 1;
             display: flex;
@@ -183,12 +185,19 @@
             display: none;
             padding-left: 5px;
         }
+        .logo {
+            text-align: center;
+            margin: 30px 0;
+        }
     </style>
 </head>
 
 <body>
+    <div class="logo">
+        <h1>Chào mừng bạn đến với GameX </h1>
+    </div>
 
-    <nav class="navbar navbar-expand-lg navbar-dark">
+    <!-- <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="#">
                 <i class="bi bi-controller"></i> GameX
@@ -223,7 +232,7 @@
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a class="dropdown-item" href="https://support.google.com/?hl=vi">
+                            <li><a class="dropdown-item" href="https://support.google.com/?hl=en">
                                     <i class="bi bi-question-circle"></i> Trợ giúp?
                                 </a></li>
                         </ul>
@@ -231,7 +240,7 @@
                 </ul>
             </div>
         </div>
-    </nav>
+    </nav> -->
 
     <div class="auth-container">
         <div class="auth-card">
@@ -329,7 +338,7 @@
             const passErr = document.getElementById('loginPassError');
 
             if (user === "") {
-                userErr.innerText = "Bạn chưa nhập tên tài khoản kìa!";
+                userErr.innerText = "Mày chưa nhập tên tài khoản kìa!";
                 userErr.style.display = 'block';
                 isValid = false;
             } else {
@@ -346,26 +355,26 @@
 
             if (isValid) {
                 let accounts = JSON.parse(localStorage.getItem('gamex_users')) || [];
-
                 const matchedUser = accounts.find(acc => acc.username === user);
 
                 if (!matchedUser) {
-                    userErr.innerText = "Tài khoản này chưa được đăng ký bạn ơi!";
+                    userErr.innerText = "Tài khoản này chưa được đăng ký mày ơi!";
                     userErr.style.display = 'block';
                     isValid = false;
                 } else if (matchedUser.password !== pass) {
-                    passErr.innerText = "Sai mật khẩu rồi, bạn nhớ lại xem nào!";
+                    passErr.innerText = "Sai mật khẩu rồi, nhớ lại xem nào!";
                     passErr.style.display = 'block';
                     isValid = false;
                 }
             }
 
             if (isValid) {
-                alert("Đăng nhập thành công! Đang chuyển hướng vào trang chủ...");
+                alert("Đăng nhập chuẩn đét! Đang chuyển hướng vào trang chủ...");
                 window.location.href = "trang_chu.html"; 
             }
             return isValid;
         }
+
 
         function validateRegister(e) {
             e.preventDefault();
@@ -380,7 +389,7 @@
             const confirmErr = document.getElementById('regConfirmPassError');
 
             if (user.length < 5) {
-                userErr.innerText = "Tên tài khoản phải từ 5 ký tự trở lên nha bạn!";
+                userErr.innerText = "Tên tài khoản phải từ 5 ký tự trở lên nha mày!";
                 userErr.style.display = 'block';
                 isValid = false;
             } else {
@@ -396,7 +405,7 @@
             }
 
             if (confirmPass === "") {
-                confirmErr.innerText = "Bạn phải xác nhận lại mật khẩu.";
+                confirmErr.innerText = "Mày phải xác nhận lại mật khẩu.";
                 confirmErr.style.display = 'block';
                 isValid = false;
             } else if (pass !== confirmPass) {
@@ -409,7 +418,6 @@
 
             if (isValid) {
                 let accounts = JSON.parse(localStorage.getItem('gamex_users')) || [];
-
                 const isExisted = accounts.some(acc => acc.username === user);
                 
                 if (isExisted) {
@@ -423,8 +431,8 @@
             }
 
             if (isValid) {
-                alert("Đăng ký tài khoản thành công! Dữ liệu đã lưu, giờ bạn đăng nhập thử đi.");
-                switchForm('login'); 
+                alert("Đăng ký tài khoản thành công! Giờ quay lại đăng nhập đi mày.");
+                switchForm('login');
             }
             return isValid;
         }
