@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OneGame - Trắc nghiệm Blox Fruits</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1b1d1f 0%, #2d3436 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: white;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.05) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px 0;
+        }
+
+        .navbar-brand {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #00d9ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8) !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 8px 15px !important;
+            border-radius: 8px;
+        }
+
+        .nav-link:hover {
+            color: #00d9ff !important;
+            background: rgba(0, 217, 255, 0.1);
+        }
+
+        .nutQuiz .nav-link {
+            color: #ffae00 !important;
+        }
+
+        .dropdown-menu {
+            background: rgba(45, 52, 54, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 10px;
+        }
+
+        .dropdown-item {
+            color: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            padding: 10px 15px;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(0, 217, 255, 0.2);
+            color: #00d9ff;
+        }
+
+        .container-quiz {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        .card-custom {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .card-custom:hover {
+            border-color: rgba(0, 217, 255, 0.3);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-title {
+            color: #00d9ff;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quiz-option {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 14px 20px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .quiz-option:hover {
+            background: rgba(0, 217, 255, 0.08);
+            border-color: rgba(0, 217, 255, 0.4);
+        }
+
+        .form-check-input {
+            cursor: pointer;
+            background-color: transparent;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .form-check-input:checked {
+            background-color: #00d9ff;
+            border-color: #00d9ff;
+        }
+
+        .form-check-label {
+            cursor: pointer;
+            width: 100%;
+            margin-left: 10px;
+            font-size: 1rem;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(45deg, #00d9ff, #00ff88);
+            color: #1b1d1f;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .btn-submit:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(0, 217, 255, 0.4);
+            color: #1b1d1f;
+        }
+
+        .result-box {
+            display: none;
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.1) 0%, rgba(0, 255, 136, 0.1) 100%);
+            border: 2px solid #00ff88;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .result-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #00ff88;
+            margin-bottom: 10px;
+        }
+
+        .result-score {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+        }
+
+        .result-rank {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #ffae00;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="trang_chu.html">
+                <i class="bi bi-controller"></i> GameX
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li>
+                        <a class="nav-link" href="trang_chu.html">
+                            <i class="bi bi-house-door"></i> Trang chủ
+                        </a>
+                    </li>
+                    <div class="nutQuiz">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <i class="bi bi-trophy"></i> Đố vui Blox Fruit
+                            </a>
+                        </li>
+                    </div>
+                    <li class="nav-item">
+                        <a class="nav-link" href="AI.html">
+                            <i class="bi bi-cpu"></i> AI
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <i class="bi bi-tools"></i> Tiện ích
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="tim_kiem.html">
+                                    <i class="bi bi-search"></i> Tìm kiếm thông tin game
+                                </a></li>
+                            <li><a class="dropdown-item" href="http://127.0.0.1:5500/Cuu_hang.html#">
+                                    <i class="bi bi-shop"></i> Tìm kiếm cửa hàng tải game
+                                </a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="https://support.google.com/?hl=vi">
+                                    <i class="bi bi-question-circle"></i> Trợ giúp?
+                                </a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-quiz">
+        <div class="text-center mb-5">
+            <h2 style="font-weight: 700; background: linear-gradient(45deg, #ffae00, #ff0055); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                TRẮC NGHIỆM KIẾN THỨC BLOX FRUITS
+            </h2>
+            <p class="text-muted">Chứng minh bạn là một Vua Hải Tặc thực thụ bằng cách trả lời đúng các câu hỏi dưới đây!</p>
+        </div>
+
+        <form id="quizForm">
+            <div class="card-custom">
+                <div class="card-title">
+                    <i class="bi bi-question-circle-fill"></i> Câu 1: Combo nào là meta hiện tại (2026)?
+                </div>
+                <div class="quiz-option">
+                    <input class="form-check-input" type="radio" name="q1" id="q1a" value="A">
+                    <label class="form-check-label" for="q1a">A. Sanguine-Art / Kitsune / Yama / Sound-Guitar</label>
+                </div>
+                <div class="quiz-option">
+                    <input class="form-check-input" type="radio" name="q1" id="q1b" value="B">
+                    <label class="form-check-label" for="q1b">B. Combat / Rocket / Katana / Slingshot</label>
+                </div>
+                <div class="quiz-option">
+                    <input class="form-check-input" type="radio" name="q1" id="q1c" value="C">
+                    <label class="form-check-label" for="q1c">C. Godhuman / Dragon / skibiditrident / Kabucha</label>
+                </div>
+                <div class="quiz-option">
+                    <input class="form-check-input" type="radio" name="q1" id="q1d" value="D">
+                    <label class="form-check-label" for="q1d">D. Sanguine-Art / Budda / CDK / Sound-Guitar<S></S></label>
+                </div>
+            </div>
+
+            <div class="card-custom">
+                <div class="card-title">
+                    <i class="bi bi-question-circle-fill"></i> Câu 2: Để có thể di chuyển từ Thế giới thứ nhất (Sea 1) sang Thế giới thứ hai (Sea 2), nhân vật của bạn cần đạt cấp độ (Level) tối thiểu là bao nhiêu?
+                </div>
+                <div class="quiz-option">
+                    <input class="form-check-input" type="radio" name="q2" id="q2a" value="A">
+                    <label class="form-check-label" for="q2a">A. Cấp độ 700</label>
+                </div>
+                <div class="quiz-option">
+                    <input class="form-check-input" type="radio" name="q2" id="q2b" value="B">
+                    <label class="form-check-label" for="q2b">B. Cấp độ 850</label>
+                </div>
+                <div class="quiz-option">
+                    <input class="form-check-input" type="radio" name="q2" id="q2c" value="C">
+                    <label class="form-check-label" for="q2c">C. Cấp độ 1000</label>
+                </div>
+                <div class="quiz-option">
+                    <input class="form-check-input" type="radio" name="q2" id="q2d" value="D">
+                    <label class="form-check-label" for="q2d">D. Cấp độ 1500</label>
+                </div>
+            </div>
+
+            <div class="card-custom">
+                <div class="card-title">
+                    <i class="bi bi-question-circle-fill"></i> Câu 3: Song kiếm huyền thoại "Cursed Dual Katana" (CDK) là sự kết hợp hoàn hảo từ hai thanh kiếm nào?
+                </div>
+                <div class="quiz-option">
+                    <input class="form-check-input" type="radio" name="q3" id="q3a" value="A">
+                    <label class="form-check-label" for="q3a">A. Shisui và Wando</label>
+                </div>
+                <div class="quiz-option">
+                    <input class="form-check-input" type="radio" name="q3" id="q3b" value="B">
+                    <label class="form-check-label" for="q3b">B. Tushita và Yama</label>
+                </div>
+                <div class="quiz-option">
+                    <input class="form-check-input" type="radio" name="q3" id="q3c" value="C">
+                    <label class="form-check-label" for="q3c">C. Saddi và Shisui</label>
+                </div>
+                <div class="quiz-option">
+                    <input class="form-check-input" type="radio" name="q3" id="q3d" value="D">
+                    <label class="form-check-label" for="q3d">D. Dark Blade và Hallow Scythe</label>
+                </div>
+            </div>
+
+            <div class="card-custom">
+                <div class="card-title">
+                    <i class="bi bi-question-circle-fill"></i> Câu 4: Chủng tộc nào trong game mạnh nhất thời điểm hiện tại?
+                </div>
+                <div class="quiz-option">
+                    <input class="form-check-input" type="radio" name="q4" id="q4a" value="A">
+                    <label class="form-check-label" for="q4a">A. Tộc Mink (Thỏ)</label>
+                </div>
+                <div class="quiz-option">
+                    <input class="form-check-input" type="radio" name="q4" id="q4b" value="B">
+                    <label class="form-check-label" for="q4b">B. Tộc Shark / Fishman (Người cá)</label>
+                </div>
+                <div class="quiz-option">
+                    <input class="form-check-input" type="radio" name="q4" id="q4c" value="C">
+                    <label class="form-check-label" for="q4c">C. Tộc Angel / Sky (Thiên thần)</label>
+                </div>
+                <div class="quiz-option">
+                    <input class="form-check-input" type="radio" name="q4" id="q4d" value="D">
+                    <label class="form-check-label" for="q4d">D. Tộc Ghoul (Quỷ)</label>
+                </div>
+            </div>
+
+            <div class="card-custom">
+                <div class="card-title">
+                    <i class="bi bi-question-circle-fill"></i> Câu 5: Để triệu hồi được Raid Boss Râu Đen (Darkbeard) tại đấu trường Sea 2, người chơi bắt buộc phải thu thập vật phẩm nào?
+                </div>
+                <div class="quiz-option">
+                    <input class="form-check-input" type="radio" name="q5" id="q5a" value="A">
+                    <label class="form-check-label" for="q5a">A. Fist of Darkness (Nắm đấm bóng tối)</label>
+                </div>
+                <div class="quiz-option">
+                    <input class="form-check-input" type="radio" name="q5" id="q5b" value="B">
+                    <label class="form-check-label" for="q5b">B. God's Chalice (Chén thánh)</label>
+                </div>
+                <div class="quiz-option">
+                    <input class="form-check-input" type="radio" name="q5" id="q5c" value="C">
+                    <label class="form-check-label" for="q5c">C. Hellfire Torch (Đuốc địa ngục)</label>
+                </div>
+                <div class="quiz-option">
+                    <input class="form-check-input" type="radio" name="q5" id="q5d" value="D">
+                    <label class="form-check-label" for="q5d">D. Alucard Fragment</label>
+                </div>
+            </div>
+
+            <button type="button" class="btn-submit" onclick="chamDiemQuiz()">
+                <i class="bi bi-check-circle"></i> Nộp bài & Xem kết quả
+            </button>
+        </form>
+
+        <div class="result-box" id="boxKetQua">
+            <div class="result-title">🎉 HOÀN THÀNH BÀI TRẮC NGHIỆM! 🎉</div>
+            <div class="result-score" id="textDiemSo">Bạn đã trả lời đúng 0/5 câu hỏi.</div>
+            <div class="result-rank" id="textDanhHieu">Danh hiệu: Đang tính toán...</div>
+        </div>
+    </div>
+
+    <script>
+        function chamDiemQuiz() {
+            const tongSoCau = 5;
+            const dapAnDung = {
+                q1: 'A', 
+                q2: 'A', 
+                q3: 'B', 
+                q4: 'D', 
+                q5: 'A'  
+            };
+
+            let soCauDung = 0;
+            let soCauDaTraLoi = 0;
+
+            for (let i = 1; i <= tongSoCau; i++) {
+                const checkedOption = document.querySelector(`input[name="q${i}"]:checked`);
+                if (checkedOption) {
+                    soCauDaTraLoi++;
+                    if (checkedOption.value === dapAnDung[`q${i}`]) {
+                        soCauDung++;
+                    }
+                }
+            }
+
+            if (soCauDaTraLoi < tongSoCau) {
+                alert("Bạn chưa chọn hết đáp án kìa! Vui lòng hoàn thành đủ 5 câu hỏi rồi mới nộp bài nha!");
+                return;
+            }
+
+            document.getElementById('textDiemSo').innerText = `Bạn đã xuất sắc trả lời đúng ${soCauDung}/${tongSoCau} câu hỏi.`;
+
+            let danhHieu = "";
+            if (soCauDung === 5) {
+                danhHieu = "🏆 VUA HẢI TẶC BLOX FRUITS (Kiến thức đạt mức Godhuman!)";
+            } else if (soCauDung >= 3) {
+                danhHieu = "⚔️ CAO THỦ SEA 3 (Hiểu biết rất sâu sắc về thế giới Tân Thế Giới)";
+            } else {
+                danhHieu = "⛵ TÂN THỦ SEA 1 (Hãy cày thêm cấp độ và làm thêm nhiệm vụ nhé!)";
+            }
+
+            document.getElementById('textDanhHieu').innerText = `Xếp hạng: ${danhHieu}`;
+
+            const boxKetQua = document.getElementById('boxKetQua');
+            boxKetQua.style.display = 'block';
+            boxKetQua.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
